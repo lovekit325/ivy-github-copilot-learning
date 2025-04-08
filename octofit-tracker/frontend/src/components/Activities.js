@@ -4,7 +4,7 @@ const Activities = () => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    fetch('https://special-goggles-g45v7jjx6jghwr45-8000.app.github.dev/api/activities')
+    fetch('https://special-goggles-g45v7jjx6jghwr45-8000.app.github.dev/api/activities/?format=json')
       .then(response => response.json())
       .then(data => setActivities(data));
   }, []);

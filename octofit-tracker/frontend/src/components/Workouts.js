@@ -4,7 +4,7 @@ const Workouts = () => {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
-    fetch('https://special-goggles-g45v7jjx6jghwr45-8000.app.github.dev/api/workouts')
+    fetch('https://special-goggles-g45v7jjx6jghwr45-8000.app.github.dev/api/workouts/?format=json')
       .then(response => response.json())
       .then(data => setWorkouts(data));
   }, []);
