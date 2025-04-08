@@ -13,28 +13,38 @@ class Command(BaseCommand):
         client = MongoClient(settings.DATABASES['default']['HOST'], settings.DATABASES['default']['PORT'])
         db = client[settings.DATABASES['default']['NAME']]
 
+        # Debugging: Print database name and collections
+        print(f"Connected to database: {db.name}")
+        print(f"Existing collections: {db.list_collection_names()}")
+
         # Drop existing collections
         db.users.drop()
         db.teams.drop()
         db.activity.drop()
         db.leaderboard.drop()
         db.workouts.drop()
+        print("Dropped existing collections.")
 
         # Create users
         users = [
             User(_id=ObjectId(), username='thundergod', email='thundergod@mhigh.edu', password='thundergodpassword'),
             User(_id=ObjectId(), username='metalgeek', email='metalgeek@mhigh.edu', password='metalgeekpassword'),
             User(_id=ObjectId(), username='zerocool', email='zerocool@mhigh.edu', password='zerocoolpassword'),
-            User(_id=ObjectId(), username='crashoverride', email='crashoverride@hmhigh.edu', password='crashoverridepassword'),
+            User(_id=ObjectId(), username='crashoverride', email='crashoverride@mhigh.edu', password='crashoverridepassword'),
             User(_id=ObjectId(), username='sleeptoken', email='sleeptoken@mhigh.edu', password='sleeptokenpassword'),
         ]
         User.objects.bulk_create(users)
+        print(f"Inserted users: {users}")
 
         # Create teams
-        team = Team(_id=ObjectId(), name='Blue Team')
-        team.save()
+        team1 = Team(_id=ObjectId(), name='Blue Team')
+        team2 = Team(_id=ObjectId(), name='Gold Team')
+        team1.save()
+        team2.save()
+        print(f"Inserted teams: {[team1, team2]}")
         for user in users:
-            team.members.add(user)
+            team1.members.add(user)
+        print(f"Added members to team: {team1.name}")
 
         # Create activities
         activities = [
@@ -45,6 +55,7 @@ class Command(BaseCommand):
             Activity(_id=ObjectId(), user=users[4], activity_type='Swimming', duration=timedelta(hours=1, minutes=15)),
         ]
         Activity.objects.bulk_create(activities)
+        print(f"Inserted activities: {activities}")
 
         # Create leaderboard entries
         leaderboard_entries = [
@@ -55,6 +66,7 @@ class Command(BaseCommand):
             Leaderboard(_id=ObjectId(), user=users[4], score=80),
         ]
         Leaderboard.objects.bulk_create(leaderboard_entries)
+        print(f"Inserted leaderboard entries: {leaderboard_entries}")
 
         # Create workouts
         workouts = [
@@ -65,5 +77,6 @@ class Command(BaseCommand):
             Workout(_id=ObjectId(), name='Swimming Training', description='Training for a swimming competition'),
         ]
         Workout.objects.bulk_create(workouts)
+        print(f"Inserted workouts: {workouts}")
 
         self.stdout.write(self.style.SUCCESS('Successfully populated the database with test data.'))
